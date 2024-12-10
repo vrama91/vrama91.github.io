@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Uncategorized &#8211; vrama91.github.io</title>
+	<atom:link href="/category/uncategorized/feed/" rel="self" type="application/rss+xml" />
+	<link></link>
+	<description></description>
+	<lastBuildDate>Tue, 10 Dec 2024 00:29:15 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.7.1</generator>
+	<item>
+		<title>Fifo Memory</title>
+		<link>/fifo-memory/</link>
+					<comments>/fifo-memory/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Tue, 10 Dec 2024 00:29:15 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">http://localhost:8080/vrama91/?p=28</guid>
+
+					<description><![CDATA[FIFOs, RAMs, and ROMs Unlike random-access memories (RAMs) and read-only memories (ROMs), a FIFO does not require an address to access data. Another difference between a FIFO and a RAM or ROM is data retention: in a RAM or ROM, data at a particular address remains unchanged until another value is written into the memory, [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p><b>FIFOs, RAMs, and ROMs</b></p>
+<p>Unlike random-access memories (RAMs) and read-only memories (ROMs), a FIFO does not require an address to access data. Another difference between a FIFO and a RAM or ROM is data retention: in a RAM or ROM, data at a particular address remains unchanged until another value is written into the memory, and reading a data value does not change or erase the value from the memory. In a FIFO, data written into the memory is retained until it is read out; and once the data word is read out, it no longer exists in the memory and cannot be accessed again. (The exceptions to this rule are FIFOs that have a retransmit feature; retransmission allows for a segment of a FIFO&#8217;s memory to be read many times, although the data is written into the FIFO only once.)</p>
+<p>Further, due to the nature of their data retention, FIFOs, unlike RAMs or ROMs, have a state of &#8220;data fullness&#8221; associated with them. A FIFO can be empty, partially filled, or full, and it requires additional signal lines, or flags, to indicate the state of its memory content. The number of data words a FIFO can store before it is full depends on its size; like RAMs and ROMs, FIFOs are manufactured with different memory organizations (see table).</p>
+<p><b>FIFO applications</b></p>
+<p>Because of a FIFO&#8217;s unique attributes, it is useful in some applications where a RAM or ROM is cumbersome. The general class of applications best suited to FIFOs are those that deal with serial streams of data. Consider, for instance, a peripheral such as a video camera or network connection sending serial data over a bus to a processor. The source of the data (e.g., the camera or network hub) may provide short bursts of data at high speed, too fast for the data bus. To prevent data loss, a buffer must store the incoming words until the data bus is ready to service the transfer to the processor. If you used RAMs to implement the buffer, you would need additional circuitry, such as a direct-memory access (DMA) controller, to supply and increment the RAM&#8217;s read and write addresses as the data from the peripheral is being stored and later forwarded onto the data bus. You can avoid the extra design effort and expense by using a FIFO. That is, since a FIFO has no addressing requirements and provides data at the read port in the same order the data was presented at the write port, no additional circuitry is needed to implement a store-and-forward buffer.</p>
+<p>The store-and-forward buffer example indicates another application particularly well suited to FIFOs. In the example, data is written into the FIFO by a high-speed data source and read out onto a lower-speed data bus. The FIFO converts the data rate from a high speed to a lower speed. The example demonstrates that a FIFO does not require a specific relationship between its input and output data rates. This means that a FIFO can serve as a link between two asynchronous interfaces.</p>
+<p>Error recovery is an application in which the retransmit feature is useful. Suppose network packets are sent through the FIFO then across a very long cable to a receiver. Because there is a possibility of data corruption on the long cable, you should use a FIFO with retransmit to hold the transmitted data until the packet&#8217;s recipient confirms a successful transmission; if data is corrupted, the retransmit feature will resend the packet until it is received error-free.</p>
+<p><b>Asynchronous FIFOs</b></p>
+<p>FIFO read and write port interfaces are available in either asynchronous or synchronous versions. Asynchronous FIFOs use read and write pulses to access the memory. That is, when data is presented at the right time with respect to a write pulse, the data is written into memory; similarly, a read pulse pulls data from memory. The width of the read and write pulses must meet certain requirements for the FIFO to operate correctly; i.e., the write pulse width requirement defines the minimum write cycle, and the read pulse width requirement defines the minimum read cycle. The read access time defines the latency (delay) from the time a read is requested until the data is presented at the read port.<br />
+<b>Asynchronous. </b>In an asynchronous FIFO, a write pulse places the data present on the write port into the memory. Data must be present for one setup time before the deasserting edge of the write pulse (the high-to-low transition for an active-high pulse, and the low-to-high transition for an active-low pulse). A read pulse pulls data from the memory onto the read port. Data appears on the read port after one access time from the asserting edge of the read pulse. Note that as the read and write enables approach one another, the falling and rising edges of the empty flag also approach one another, decreasing the empty flag width.</p>
+<p>The data-state flag signals for asynchronous FIFOs are updated one access time after completion of the write or read affecting the state of the memory, and indicate whether or not a write or read is possible. If the FIFO is empty, reads are ignored; a full FIFO ignores writes. Further, by monitoring the FIFO&#8217;s empty and full flags, a circuit using a FIFO can determine whether or not a read or write will be valid. For an asynchronous FIFO, the monitoring circuits must be able to handle arbitrarily small flag pulse widths, which may result when all flags are updated by both the read and the write pulses.</p>
+<p>For example, if reads and writes occur very close together at an empty or full boundarycondition, the size of the empty or full flag could approach that of a glitch. As the read- and write-enables approach one another, the falling and rising edges of the empty flag also approach one another, decreasing the width of the empty flag.</p>
+<p>In most applications, the empty and full flags are used to gate the read and write pulses, respectively, so very narrow empty or full flags are not significant. Nevertheless, any asynchronous FIFO application that relies on monitoring the empty or full flags should be designed to handle an arbitrarily small flag width.</p>
+<p><b>Synchronous FIFOs</b></p>
+<p>Synchronous FIFOs use read and write clocks and enable lines to access memory. The clocks can be in burst mode or free running and do not need to have any specific relationship with one another (i.e., the read and write clocks do not have to be synchronized).</p>
+<p>Supplying an active write-enable one setup time prior to the rising edge of the write clock lets data be written into memory; similarly, reading data from memory requires the read-enable to be active one setup time prior to the rising edge of the read clock. The frequency of the write clock determines the fastest rate that data can be placed into the memory, while the frequency of the read clock determines the fastest rate that data can be pulled from the memory.<br />
+<b>Synchronous. </b>Synchronous FIFOs use read and write clocks and enable lines to access memory: supplying an active write-enable one setup time prior to the rising edge of the write clock lets data be written into memory; similarly, reading data from memory requires the read-enable be active one setup time prior to the rising edge of the read clock. The read clock, asserted when read enable is active, pulls the desired data from the memory and places it onto the read port. The frequency of the write clock determines the fastest rate that data can be placed into the memory, while the frequency of the read clock determines the fastest rate that data can be pulled from the memory.</p>
+<p>As in asynchronous FIFOs, the data-state flag signals in synchronous FIFOs are updated one access time after completion of the write or read affecting the state of the memory. Synchronous FIFO flag updates differ from asynchronous FIFO flag updates, however, in that the pulse width of the flags has a guaranteed width based on the period of the read or write clocks. This is possible because the empty and full flags are latched internally, by the read and write clocks, respectively. So, no matter how closely together reads and writes occur, the state flags will always be valid for an entire clock cycle. This means that the state flags in a synchronous FIFO can be monitored by external circuits in which there is no need to handle arbitrarily small pulse widths.</p>
+<p><b>Width expansion</b></p>
+<p>Some applications may require a width or depth unavailable in a standard FIFO. To accommodate such designs, you can group FIFOs to increase the data word width or the memory depth, or both.</p>
+<p>Width expansion involves using multiple FIFOs to emulate a single FIFO with a larger data-word width. For example, you can use two FIFOs, each with an 8K depth and an 18-bit word width (8K x 18), to create a FIFO with an 8K depth and a 36-bit word width (8K x 36). For many asynchronous and synchronous FIFOs, width expansion is simply a matter of operating multiple FIFOs in parallel, extending the data bus over the various devices, and driving one version of the read and write signals to all the parts.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/fifo-memory/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Understanding Specialty Memories: FIFOs (Introduction)</title>
+		<link>/understanding-specialty-memories-fifos-introduction/</link>
+					<comments>/understanding-specialty-memories-fifos-introduction/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Tue, 10 Dec 2024 00:29:02 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">http://localhost:8080/vrama91/?p=26</guid>
+
+					<description><![CDATA[A FIFO is a two-port memory based on dual-ported RAM cells. One port is used for writing data into the memory, while the other port is used for reading data out. A memory location can be written to and read from simultaneously, and a FIFO&#8217;s first-in/first-out architecture, or queue, defines the method for storing and [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>A FIFO is a two-port memory based on dual-ported RAM cells. One port is used for writing data into the memory, while the other port is used for reading data out. A memory location can be written to and read from simultaneously, and a FIFO&#8217;s first-in/first-out architecture, or queue, defines the method for storing and retrieving data from memory: data is written into a FIFO one value at a time, and it is read from the device in the same order as it was written.</p>
+<p>While a RAM must perform write and read operations sequentially, a FIFO can do them simultaneously. Thus, a FIFO has twice the throughput of a conventional RAM. What, then, is the maximum throughput frequency of a single FIFO in terms of its standalone operating frequency and its fallthrough time (the time needed to update the pointers to the RAM)?</p>
+<p>The minimum throughput period (t<sub>MIN</sub>) corresponding to the standalone period (data access time, t<sub>A</sub>) and the fallthrough time (t<sub>F</sub>) is, tmin = t<sub>F</sub> + t<sub>A</sub>. In terms of frequency, 1/f<sub>MAX</sub> = t<sub>F</sub> + 1/f<sub>A</sub>, from which f<sub>MAX</sub> = 1/(t<sub>F</sub> + 1/f<sub>A</sub>). Here, f<sub>MAX</sub> is the FIFO&#8217;s maximum throughput frequency and f<sub>A</sub> is the maximum standalone operating frequency.</p>
+<p>Note that if the fallthrough time can be made zero, then f<sub>MAX</sub> = f<sub>A</sub>. A modern RAM-based architecture (i.e., one using a dual-ported RAM cell and pointers to address the RAM) essentially accomplishes this by reducing the fallthrough time to a very small value—which is why today&#8217;s FIFOs are referred to as zero-fallthrough-time FIFOs.</p>
+<p>When its shift-in and shift-out signals are derived from independent frequency sources, the FIFO is operating asynchronously. In this mode, the relationship between the output-ready signal and the output system clock is not known, either with respect to frequency or with respect to phase. However, when the shift-in and shift-out signals are derived from a common frequency source or clock—so there is a precise, known relationship between them—the FIFO is by definition operating in the synchronous mode.</p>
+<p>The three &#8220;goodness attributes&#8221; of FIFOs are the same as for RAMs—wider, deeper, faster. And just as the registered SRAM replaced the non-registered SRAM as processor speeds increased, the synchronous (clocked) FIFO is replacing the asynchronous FIFO. Indeed, because of their significant advantages over asynchronous FIFOs, synchronous FIFOs should be your choice for new designs. Their key advantages are as follow:</p>
+<p>• Registered interfaces at the input and output provide the simplest and fastest FIFO interfacing—all signals are synchronized to the rising edges of the read or write system clocks, which run continuously and are applied directly to the FIFO;</p>
+<p>• Read and write operations are easily manipulated by external, synchronous read and write state machines, which in turn are controlled by the read and write system clocks, respectively; and because the flags are internally synchronized to their respective clocks, external synchronizers are no longer needed;</p>
+<p>• Read and write operations are controlled by enables, thereby eliminating any need for externally-generated read and write strobes; because the enable signals are sampled only during the rising edge of the clock (rather than in response to a level), noise immunity is improved (a fundamental advantage of edge sensing over level sensing), increasing system reliability.</p>
+<p><b>Memory inside.</b> This diagram depicts the structure of a modern, third-generation FIFO. In contrast to an asynchronous FIFO, which uses input and output handshaking signals, this is a synchronous device that uses read and write enables, continuously running read and write clocks, and status flags synchronized to the clocks. The fundamental FIFO architecture remains, however: dual-ported RAM cells at the core, surrounded by the logic needed to operate the device—which in a clocked FIFO consists mainly of flag and pointer circuitry. The general class of applications best suited to FIFOs are those that deal with serial streams of data, as in interfacing systems operating at different data rates and store-and-forward buffers. Indeed, since they are designed to have equal read and write cycles and have no address lines, FIFOs are the ultimate, infinitely expandable buffer; if you need more storage, just put a deeper FIFO in the same socket. And since there does not need to be a specific relationship between a FIFO&#8217;s input and output data rates, a FIFO can serve as a link between two asynchronous interfaces.</p>
+<p>A first-in/first-out memory, or FIFO, is a memory device having two ports, one port for writing data into the memory, and one port for reading data out. Often called a queue, the first-in/first-out architecture defines the method for storing and retrieving data: that is, data is written into a FIFO one value at a time and read out in the same order.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/understanding-specialty-memories-fifos-introduction/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Atmel Comments That Guidance Remains Unchanged</title>
+		<link>/atmel-comments-that-guidance-remains-unchanged/</link>
+					<comments>/atmel-comments-that-guidance-remains-unchanged/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Mon, 09 Dec 2024 23:27:30 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">/?p=24</guid>
+
+					<description><![CDATA[Atmel® Corporation (NASDAQ: ATML) commented today that its financial guidance remains unchanged, and that the Company is executing on its restructuring plan to bring costs down and return the Company to profitability. George Perlegos, President and Chief Executive Officer, stated, &#8220;We believe Atmel&#8217;s business is improving, as evidenced by the 14% sequential increase in second [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Atmel® Corporation (NASDAQ: ATML) commented today that its financial guidance remains unchanged, and that the Company is executing on its restructuring plan to bring costs down and return the Company to profitability.</p>
+<p>George Perlegos, President and Chief Executive Officer, stated, &#8220;We believe Atmel&#8217;s business is improving, as evidenced by the 14% sequential increase in second quarter revenues to $315 million, from $276 million in the first quarter of 2002. &#8220;Also, our financial position remains strong,&#8221; continued Perlegos. &#8220;Cash and equivalents totaled over $440 million at June 30, and our estimated EBITDA totaled $26 million for the second quarter, which is approximately double the level of the previous quarter.</p>
+<p>&#8220;As we stated on the quarterly conference call last week, we have made a great deal of progress in the restructuring program to date, such as a reduction of approximately 1500 in headcount, and a $97 million reduction in operating expenses since the first quarter of 2001. Also we are continuing to take the appropriate steps to best position the Company for the upturn, such as the recently announced closure of Fab 8 in Irving, Texas.</p>
+<p>Perlegos concluded, &#8220;We remain tightly focused on achieving our expense reduction goals by completing the Company-wide migration to more cost-effective technology processes such as 0.18 micron, closing or idling factories until the capacity is needed, and eventually closing some of our older facilities.&#8221;</p>
+<p>Management believes these cost reduction measures should be completed over the next several quarters.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/atmel-comments-that-guidance-remains-unchanged/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Atmel Introduces Image Playback ICs for Display of Pictures or Clips stored in Digital Camera Flash Memory on TVs, Projectors and LCD Panels</title>
+		<link>/atmel-introduces-image-playback-ics-for-display-of-pictures-or-clips-stored-in-digital-camera-flash-memory-on-tvs-projectors-and-lcd-panels/</link>
+					<comments>/atmel-introduces-image-playback-ics-for-display-of-pictures-or-clips-stored-in-digital-camera-flash-memory-on-tvs-projectors-and-lcd-panels/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Mon, 09 Dec 2024 23:24:55 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">/?p=22</guid>
+
+					<description><![CDATA[Atmel® Corporation (NASDAQ: ATML) today announced the introduction of a new family of products targeted for playing back images stored in flash cards and projecting them to a variety of display devices such as analog and digital TVs, digital cameras, LCD panels, projectors, etc. The first product in this line, AT76C112 has the ability to [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Atmel® Corporation (NASDAQ: ATML) today announced the introduction of a new family of products targeted for playing back images stored in flash cards and projecting them to a variety of display devices such as analog and digital TVs, digital cameras, LCD panels, projectors, etc. The first product in this line, AT76C112 has the ability to read images and video clips stored in flash cards, decompress them, and display them on the target display system. It supports SD<sup>TM</sup> (Secure Digital), MMC<sup>TM</sup> (MultiMedia Card), Memorystick®, CompactFlash®, SSFDC (Solid State Floppy Disk Card), and Atmel DataFlash® cards. Samples and software libraries are available now, evaluation boards will be available beginning of September. Production is now ramping up in support of several digital TV and multimedia projector manufacturers who are expected to announce end products this year.</p>
+<p>AT76C112, which is the first of a family of products, is the most highly integrated flash card playback device in the market today. It requires fewer support chips than any other competitive product currently available. Based on an on-chip embedded ARM7® processor that controls the entire device, AT76C112 provides many hardware features, including compression/decompression engines, interfaces for all Flash cards, and system interfaces such as full speed USB and UART, as well as digital video output.</p>
+<p>The device can be used in a variety of applications ranging from multimedia play back device, to flash card reader-assessor for PC applications.</p>
+<p>Atmel&#8217;s Director of Multimedia Products, Tassos Markas remarked, &#8220;This technology enables consumers to view their pictures at a much higher resolution compared with traditional paper. Also, it can do it in a much more relaxed, user-friendly setting. With the rapid growth of digital still camera market and the high volume of digital imaging content, we expect that this new line of products will allow Atmel to grow our digital still camera IC business.&#8221;</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/atmel-introduces-image-playback-ics-for-display-of-pictures-or-clips-stored-in-digital-camera-flash-memory-on-tvs-projectors-and-lcd-panels/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Atmel Adds FPSLIC Support to AVR Starter Kit</title>
+		<link>/atmel-adds-fpslic-support-to-avr-starter-kit/</link>
+					<comments>/atmel-adds-fpslic-support-to-avr-starter-kit/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Mon, 09 Dec 2024 23:22:08 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">/?p=20</guid>
+
+					<description><![CDATA[Low-cost STK 594 Daughter Board Plugs into STK500 SAN JOSE, CA, September 3, 2002 . . . Atmel® Corporation (NASDAQ: ATML) announced today the availability of the STK 594 a low-cost add-on board that supports the FPSLICTM Product Family. Atmel&#8217;s AVR®-based FPSLIC components integrate a 20+ MIPS 8-bit AVR microcontrollwith a 5,000 to 40,000 gate FPGA, [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Low-cost STK 594 Daughter Board Plugs into STK500</p>
+<p>SAN JOSE, CA, September 3, 2002 . . . Atmel® Corporation (NASDAQ: ATML) announced today the availability of the STK 594 a low-cost add-on board that supports the FPSLIC<sup>TM</sup> Product Family. Atmel&#8217;s AVR®-based FPSLIC components integrate a 20+ MIPS 8-bit AVR microcontrollwith a 5,000 to 40,000 gate FPGA, up to 36 K-bytes of SRAM, and peripherals. FPSLIC devices provide programmable logic and an AVR microcontroller on a single chip</p>
+<p>The STK594 add-on board plugs directly into an AVR STK500 development board, creating a low cost FPSLIC development environment. Atmel&#8217;s FPSLIC devices offer designers a single chip solution with the additional memory and programmable logic. The STK594 development kit offers these designers a low cost and easy way to develop FPSLIC designs using the AVR development environment. Since FPSLIC code executes from on-chip SRAM, the AVR microcontroller performance is 20 or more MIPS.</p>
+<p>The STK 594 includes the FPSLIC daughter board, Atmel&#8217;s System Designer co-verification, code- development, and EDA tool suite. The HDL Planner tool in System Designer automates the generation of the FPGA design, so embedded designers who are not familiar with a hardware description language (HDL) can quickly and easily create the FPGA portion of the design. System Designer&#8217;s co-verification back plane supports the simultaneous debugging of the processor code during the FPGA simulation.</p>
+<p>According to Saroj Pathak, Atmel&#8217;s Programmable SLI Product Line Director, &#8220;Frequently, system designers find they need to add custom peripherals or additional logic to their MCU-based designs. However, the addition of an external FPGA or CPLD increases cost, board real estate, power consumption and design complexity. Adding external logic usually means that the embedded designer must learn how to use a hardware description language (HDL) or bring in a HDL designer &#8211; &#8211; lengthening the design cycle.</p>
+<p>&#8220;The System Designer tool suite is very friendly to code developers. It integrates the code development and FPGA design tools in a co-verification environment that automates the generation of syntactically correct Verilog or VHDL from a library of over 50 point-and-click logic and memory functions selected by the designer. Embedded system designers who have no knowledge of hardware description languages can create the FPGA portion of the FPSLIC design quickly and easily with these tools,&#8221; Pathak concluded.</p>
+<p>Atmel&#8217;s STK594 FPSLIC development kit is available now, priced at $149. The STK500 AVR Development Kit is available with a list price of $79.00</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/atmel-adds-fpslic-support-to-avr-starter-kit/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Atmel Announces New Family of Low Pin Count (LPC) Flash Memories</title>
+		<link>/atmel-announces-new-family-of-low-pin-count-lpc-flash-memories/</link>
+					<comments>/atmel-announces-new-family-of-low-pin-count-lpc-flash-memories/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Mon, 09 Dec 2024 23:21:22 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">/?p=18</guid>
+
+					<description><![CDATA[SAN JOSE CA September 17, 2002 . . . Atmel® Corporation (Nasdaq: ATML) announced today that it has started shipping its Low Pin Count (LPC) family of Flash memories. The AT49LL080 (8-Megabit) is designed to interface directly with the LPC bus used by chipsets from AMDTM, ViaTM, SiS®, and others and supply the BIOS information [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>SAN JOSE CA September 17, 2002 . . . Atmel® Corporation (Nasdaq: ATML) announced today that it has started shipping its Low Pin Count (LPC) family of Flash memories. The AT49LL080 (8-Megabit) is designed to interface directly with the LPC bus used by chipsets from AMD<sup>TM</sup>, Via<sup>TM</sup>, SiS®, and others and supply the BIOS information on the PC motherboard.</p>
+<p>The devices have uniform 64-Kbyte sectors and feature automated byte-program and sector-erase operations. Two configurable interfaces are supported: (1) Low Pin Count mode for in-system operation, and (2) Address/Address Multiplexed (A/A Mux) mode to accelerate memory array programming during manufacturing. The devices are offered in industry standard 40-lead TSOP and 32-lead PLCC surface mount packages.</p>
+<p>&#8220;Atmel is excited about entering this new market for Flash memories.&#8221; stated Anup Sidhu, Director, Flash memory marketing. &#8220;We have been a primary supplier of conventional EPROM and Flash memories for PC BIOS applications for over 15 years, and our customers have recently started asking for LPC products. In addition to the AT49LL080 we will be introducing 4 Mbit and 2 Mbit LPC family members later this year as Atmel ramps its presence in this market.&#8221;</p>
+<p>Pricing for the AT49LL080 is $3.50 in 10KU quantities.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/atmel-announces-new-family-of-low-pin-count-lpc-flash-memories/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Atmel Selects IMASYS as its Digital Cameras Distributor in France</title>
+		<link>/atmel-selects-imasys-as-its-digital-cameras-distributor-in-france/</link>
+					<comments>/atmel-selects-imasys-as-its-digital-cameras-distributor-in-france/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Mon, 09 Dec 2024 23:20:01 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">/?p=16</guid>
+
+					<description><![CDATA[Grenoble, France &#8211; September 26th, 2002. . . Atmel® Corporation announced today that it has awarded a distribution agreement in France to IMASYS for Atmel&#8217;s CCD Camera lines. IMASYS will source Atmel&#8217;s AVIIVATM M2 linescan range (0.5, 1-2-4 Kpixels high speed), CAMELIATM areascan family (resolution up to 8 Mpixels) and the recently announce AVIIVATM C2 monoline color camera [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Grenoble, France &#8211; September 26th, 2002. . . Atmel® Corporation announced today that it has awarded a distribution agreement in France to IMASYS for Atmel&#8217;s CCD Camera lines. IMASYS will source Atmel&#8217;s AVIIVA<sup>TM</sup> M2 linescan range (0.5, 1-2-4 Kpixels high speed), CAMELIA<sup>TM</sup> areascan family (resolution up to 8 Mpixels) and the recently announce AVIIVA<sup>TM</sup> C2 monoline color camera family.</p>
+<p>Christophe Robinet, Camera Marketing Manager for Atmel, said, &#8220;With their offer of a large range of vision solutions, many years of experience and high quality of service, they will add significant value to the customer relationships Atmel already has in France.&#8221;</p>
+<p>About IMASYS<br />
+Founded in 1991, IMASYS is a highly technical French Company, independent and innovative, specialized in image processing since its creation. This indisputable success is based on our know- how and a thorough offering of high technology products providing solutions at all stages of the digital image processing chain. OEMs, integrators, manufacturers and searchers, working in the various fields of vision and image processing, rely on our skills in all industrial and research domains. For further information on IMASYS, go to our website at <a href="https://web.archive.org/web/20021001083451/http://www.imasys.fr/">www.imasys.fr</a></p>
+<p>IMASYS propose a complete products and services in France covering Video cameras, optics, lightings, electronic devices for machine vision; image processing device systems and frame grabber; software and image processing libraries and development platforms and machine vision systems.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/atmel-selects-imasys-as-its-digital-cameras-distributor-in-france/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Atmel Introduces New Color Line Scan Cameras</title>
+		<link>/atmel-introduces-new-color-line-scan-cameras/</link>
+					<comments>/atmel-introduces-new-color-line-scan-cameras/#respond</comments>
+		
+		<dc:creator><![CDATA[a]]></dc:creator>
+		<pubDate>Mon, 09 Dec 2024 23:19:02 +0000</pubDate>
+				<category><![CDATA[Uncategorized]]></category>
+		<guid isPermaLink="false">/?p=14</guid>
+
+					<description><![CDATA[AVIIVA C2 a high-speed, high-performance color single CCD camera and AKYLA a tri-CCD color camera target a variety of demanding industrial and color scanning applications GRENOBLE FRANCE October 7, 2002. . . Atmel® Corporation (Nasdaq: ATML) announced today the availability of AT71C2LV and AT71C2CL, which make up AVIIVATM C2, a new member of the AVIIVA family [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>AVIIVA C2 a high-speed, high-performance color single CCD camera and AKYLA a tri-CCD color camera target a variety of demanding industrial and color scanning applications</p>
+<p>GRENOBLE FRANCE October 7, 2002. . . Atmel® Corporation (Nasdaq: ATML) announced today the availability of AT71C2LV and AT71C2CL, which make up AVIIVA<sup>TM</sup> C2, a new member of the AVIIVA family of high-speed, high performance Line scan CCD Cameras. Additionally, the introduction of Atmel&#8217;s AT71MD represents a brand new family of tri-CCD color cameras called AKYLA<sup>TM</sup>. Drawing on its advanced expertise in CCD design, technology and camera production, Atmel offers outstanding signal to noise ratios, and increased responsiveness compared with traditional CCD cameras. The AVIIVA product family has been built on a new user friendly concept comprising of three key design factors: versatility, accuracy and ease of implementation for applications such as web inspection to document scanning and from surface inspection to metrology.</p>
+<p>The AVIIVA C2 incorporates a 4 K pixel sensor with a 10 micron meter pixel size and a RGB color pattern in a 56 mm wide casing, camera mounting holes, a versatile camera attachment and the ability to fix a heatsink on any side of the camera. The camera can operate up to 60 Mpixels/sec in 12 bits and offer a very competitive color scanning solution. Additionnal flexiblity is offered to the end-user via programmable settings alongside features such as data rate selection, trigger mode, antiblooming and exposure control functions with no lag effects.</p>
+<p>The AKYLA family features 1 K and 2 K pixel sensors with a 10 micron meter pixel size targeting the most demanding color scanning applications with high color fidelity. The camera can operate up to 3&#215;30 Mpixels/sec in 10 bits.</p>
+<p>Both cameras are designed to offer excellent signal to noise performance.</p>
+<p>The AVIIVA C2 and the AKYLA Line Scan families supports Camera Link<sup>TM</sup> , the Automated Imaging Association&#8217;s new serial interface for the machine vision industry. With Camera Link, the system designer can access all data, synchronisation and total camera control with a unique and standard cable . The AVIIVA and ALKYLA Line Scan family also includes a parallel LVDS (Low Voltage Differential Signaling) version, which allows the use of longer cable. These cameras are in full production.</p>
+<p>About Atmel<br />
+Founded in 1984, Atmel Corporation is headquartered in San Jose, California with manufacturing facilities in North America and Europe. Atmel designs, manufactures and markets worldwide, advanced logic, mixed-signal, nonvolatile memory and RF semiconductors. Atmel is also a leading provider of system-level integration semiconductor solutions using CMOS, BiCMOS, SiGe, and high-voltage BCDMOS process technologies.</p>
+<p>© Atmel Corporation 2002. All rights reserved. Atmel, the Atmel logo and combinations thereof are registered trademarks and others contained herein, are trademarks of Atmel Corporation.</p>
+<p>AVIIVA<sup>TM</sup> is a trademark of Atmel Grenoble S.A. AKYLA? is a trademark of Atmel Grenoble S.A. CameraLink<sup>TM</sup> is a trademark of the AIA ( Automated Imaging Association) Terms and product names in this document may be the trademarks of others.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/atmel-introduces-new-color-line-scan-cameras/feed/</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>
